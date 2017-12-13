@@ -1,0 +1,59 @@
+// Imports
+package me.landon.antiswear;
+import org.bukkit.Bukkit;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.plugin.java.JavaPlugin;
+
+// Code
+public class Main extends JavaPlugin implements Listener {
+
+    // Plugin Enable
+    @Override
+    public void onEnable() {
+        System.out.println("[AntiSwear] Running version 1.0.");
+        Bukkit.getPluginManager().registerEvents(this, this);
+    }
+
+    // Swear Words
+    String[] swears = {
+            "fuck"
+            "fucker",
+            "retard",
+            "retarded",
+            "damnit",
+            "damnnit",
+            "shitter",
+            "asshat",
+            "damn",
+            "shit",
+            "nigger",
+            "ass",
+            "faggot",
+            "motherfucker",
+            "nigga",
+            "asshole",
+            "dick",
+            "cunt",
+            "vagina",
+            "pussy",
+            "kys"
+    };
+
+    // Replace Swear Words
+    @EventHandler
+    public void antiswear(AsyncPlayerChatEvent e) {
+        Player player = e.getPlayer();
+        for (String swears: swears) {
+            if (e.getMessage().toLowerCase().contains(swears)) {
+                if (player.hasPermission("antiswear.bypass")) return;
+                String message = e.getMessage().toLowerCase().replace(swears, "****");
+                e.setMessage(message);
+                player.playSound(player.getLocation(), Sound.ITEM_PICKUP, 3.0F, 0.5F);
+            }
+        }
+    }
+}
