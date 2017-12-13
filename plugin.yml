@@ -1,0 +1,8 @@
+main: me.landon.antiswear.Main
+name: AntiSwear
+description: Stop users from swearing.
+version: 1.0
+commands:
+  asreload:
+    aliases: []
+    description: Reload AntiSwear.
