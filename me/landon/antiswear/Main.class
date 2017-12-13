@@ -1,59 +1,67 @@
 // Imports
 package me.landon.antiswear;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Sound;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import java.util.List;
 
 // Code
-public class Main extends JavaPlugin implements Listener {
+public class Main extends JavaPlugin implements CommandExecutor, Listener {
 
     // Plugin Enable
     @Override
     public void onEnable() {
         System.out.println("[AntiSwear] Running version 1.0.");
+
+        this.getConfig().options().copyDefaults();
+        saveDefaultConfig();
+
         Bukkit.getPluginManager().registerEvents(this, this);
     }
 
-    // Swear Words
-    String[] swears = {
-            "fuck",
-            "fucker",
-            "retard",
-            "retarded",
-            "damnit",
-            "damnnit",
-            "shitter",
-            "asshat",
-            "damn",
-            "shit",
-            "nigger",
-            "ass",
-            "faggot",
-            "motherfucker",
-            "nigga",
-            "asshole",
-            "dick",
-            "cunt",
-            "vagina",
-            "pussy",
-            "kys"
-    };
+    // Blacklist
+    List<String> blacklistarray = this.getConfig().getStringList("blacklist");
 
     // Replace Swear Words
     @EventHandler
     public void antiswear(AsyncPlayerChatEvent e) {
         Player player = e.getPlayer();
-        for (String swears: swears) {
-            if (e.getMessage().toLowerCase().contains(swears)) {
+        String censor = getConfig().getString("censor");
+        for (String blacklist : blacklistarray) {
+            if (e.getMessage().toLowerCase().contains(blacklist.toLowerCase())) {
                 if (player.hasPermission("antiswear.bypass")) return;
-                String message = e.getMessage().toLowerCase().replace(swears, "****");
+                String message = e.getMessage().toLowerCase().replace(blacklist.toLowerCase(), censor);
                 e.setMessage(message);
                 player.playSound(player.getLocation(), Sound.ITEM_PICKUP, 3.0F, 0.5F);
             }
         }
+    }
+
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
+            if (cmd.getName().equalsIgnoreCase("asreload")) {
+                if (player.hasPermission("antiswear.reload")) {
+                    this.reloadConfig();
+                    this.saveConfig();
+                    player.sendMessage(ChatColor.GREEN + "AntiSwear configuration file reloaded.");
+                } else {
+                    player.sendMessage(ChatColor.RED + "You don't have permission!");
+                }
+            }
+        } else {
+            this.reloadConfig();
+            this.saveConfig();
+            sender.sendMessage(ChatColor.GREEN + "AntiSwear configuration file reloaded.");
+        }
+        return false;
     }
 }
