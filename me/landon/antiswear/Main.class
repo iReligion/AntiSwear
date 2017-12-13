@@ -20,7 +20,7 @@ public class Main extends JavaPlugin implements Listener {
 
     // Swear Words
     String[] swears = {
-            "fuck"
+            "fuck",
             "fucker",
             "retard",
             "retarded",
