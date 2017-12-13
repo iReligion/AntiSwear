@@ -1,0 +1,10 @@
+# These are the words that will be censored.
+blacklist:
+  - Fuck
+  - Bitch
+  - Ass
+  - AddWords
+
+# Color codes are not supported.
+# This is what swear words will be replaced to.
+censor: '****'
