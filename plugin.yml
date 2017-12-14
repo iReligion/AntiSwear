@@ -3,6 +3,6 @@ name: AntiSwear
 description: Stop users from swearing.
 version: 1.0
 commands:
-  asreload:
+  antiswear:
     aliases: []
-    description: Reload AntiSwear.
+    description: Antiswear base command.
