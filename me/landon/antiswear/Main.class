@@ -4,7 +4,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,7 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.List;
 
 // Code
-public class Main extends JavaPlugin implements CommandExecutor, Listener {
+public class Main extends JavaPlugin implements Listener {
 
     // Plugin Enable
     @Override
@@ -46,22 +45,73 @@ public class Main extends JavaPlugin implements CommandExecutor, Listener {
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
-            if (cmd.getName().equalsIgnoreCase("asreload")) {
-                if (player.hasPermission("antiswear.reload")) {
-                    this.reloadConfig();
-                    this.saveConfig();
-                    player.sendMessage(ChatColor.GREEN + "AntiSwear configuration file reloaded.");
-                } else {
-                    player.sendMessage(ChatColor.RED + "You don't have permission!");
-                }
-            }
-        } else {
+        if (!(sender instanceof Player)) {
             this.reloadConfig();
             this.saveConfig();
             sender.sendMessage(ChatColor.GREEN + "AntiSwear configuration file reloaded.");
+            return true;
         }
-        return false;
+
+        Player player = (Player) sender;
+
+        if (!player.hasPermission("antiswear.admin")) {
+            player.sendMessage(ChatColor.RED + "You don't have permission to use AntiSwear.");
+            return true;
+        }
+
+        if (!cmd.getName().equalsIgnoreCase("antiswear")) return true;
+        int argumentCount = args.length;
+
+        switch (argumentCount) {
+            case 0:
+                player.sendMessage(ChatColor.GREEN + "§m----------" + ChatColor.GRAY + "[" + "AntiSwear" + ChatColor.GRAY + "]" + ChatColor.GREEN + "§m----------");
+                player.sendMessage("");
+                player.sendMessage(ChatColor.GREEN + "/antiswear - Access all commands.");
+                player.sendMessage(ChatColor.GREEN + "/antiswear reload - Reload the config.");
+                player.sendMessage(ChatColor.GREEN + "/antiswear <add/remove> <word> - Add or remove a word.");
+                player.sendMessage("");
+                player.sendMessage(ChatColor.GREEN + "§m----------" + ChatColor.GRAY + "[" + "AntiSwear" + ChatColor.GRAY + "]" + ChatColor.GREEN + "§m----------");
+                break;
+            case 1:
+                String firstArg1 = args[0].toLowerCase();
+                if (firstArg1.equals("reload")) {
+                    this.reloadConfig();
+                    this.saveConfig();
+                    player.sendMessage(ChatColor.GREEN + "AntiSwear configuration file reloaded.");
+                } else if (firstArg1.equals("add")) {
+                    player.sendMessage(ChatColor.GRAY + "Correct Usage: /antiswear add <word>");
+                } else if (firstArg1.equals("remove")) {
+                    player.sendMessage(ChatColor.GRAY + "Correct Usage: /antiswear remove <word>");
+                }
+                break;
+            case 2:
+                String firstArg2 = args[0].toLowerCase();
+                String secondArg2 = args[1].toLowerCase();
+                if (firstArg2.equals("add")) {
+                    player.sendMessage(ChatColor.GREEN + args[1] + " added to blacklist.");
+                    blacklistarray.add(args[1]);
+                    this.getConfig().set("blacklist", blacklistarray);
+                    this.saveConfig();
+                    this.reloadConfig();
+                } else if (firstArg2.equals("remove")) {
+                    player.sendMessage(ChatColor.RED + args[1] + " removed from the blacklist.");
+                    blacklistarray.remove(args[1]);
+                    this.getConfig().set("blacklist", blacklistarray);
+                    this.saveConfig();
+                    this.reloadConfig();
+                }
+                break;
+            default:
+                player.sendMessage(ChatColor.GREEN + "§m----------" + ChatColor.GRAY + "[" + "AntiSwear" + ChatColor.GRAY + "]" + ChatColor.GREEN + "§m----------");
+                player.sendMessage("");
+                player.sendMessage(ChatColor.GREEN + "/antiswear - Access all commands.");
+                player.sendMessage(ChatColor.GREEN + "/antiswear reload - Reload the config.");
+                player.sendMessage(ChatColor.GREEN + "/antiswear <add/remove> <word> - Add or remove a word.");
+                player.sendMessage("");
+                player.sendMessage(ChatColor.GREEN + "§m----------" + ChatColor.GRAY + "[" + "AntiSwear" + ChatColor.GRAY + "]" + ChatColor.GREEN + "§m----------");
+                break;
+        }
+        return true;
     }
+
 }
