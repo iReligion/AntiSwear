@@ -4,12 +4,12 @@
 This is a lightweight plugin that blocks swearing on your server.
 It replaces swear words with asteriks (*). 
 
-Download it here: 
-Coming Soon
-
 ### Commands
-/asreload - Reload the configuration file.
+/antiswear - Help Command
+/antiswear reload - Reload config.
+/antiswear add <word> - Add a word to blacklist.
+/antiswear remove <word> - Remove a word from blacklist.
 
 ### Permissions
 antiswear.bypass - Bypass the censor.
-antiswear.reload - Reload the configuration file.
+antiswear.admin - Use AntiSwear commands.
