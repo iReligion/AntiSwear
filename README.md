@@ -1,5 +1,4 @@
 # AntiSwear
-## A Minecraft plugin for versions 1.8 - 1.12.
 
 This is a lightweight plugin that blocks swearing on your server.
 It replaces swear words with asteriks (*). 
@@ -18,3 +17,5 @@ It replaces swear words with asteriks (*).
 antiswear.bypass - Bypass the censor.
 
 antiswear.admin - Use AntiSwear commands.
+
+#### Compiled using Spigot 1.8.8.
